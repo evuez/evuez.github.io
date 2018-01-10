@@ -21,6 +21,7 @@ I'm *evuez* [everywhere](https://gitlab.com/u/evuez) [else](https://keybase.io/e
  - [Elixir in Action](https://www.manning.com/books/elixir-in-action)
  - [Python Essential Reference](http://www.dabeaz.com/per.html)
  - [The Rust Programming Language](https://doc.rust-lang.org/book/second-edition/)
+ - [The Little Go Book](http://openmymind.net/The-Little-Go-Book/)
 
 I also read stuff on [medium](https://medium.com/@evuez) and [pocket](https://getpocket.com/@evuez).
 
