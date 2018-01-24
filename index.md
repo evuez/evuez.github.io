@@ -20,6 +20,7 @@ I'm *evuez* [everywhere](https://gitlab.com/u/evuez) [else](https://keybase.io/e
  - [Learn You a Haskell](http://learnyouahaskell.com/)
  - [Elixir in Action](https://www.manning.com/books/elixir-in-action)
  - [Python Essential Reference](http://www.dabeaz.com/per.html)
+ - [Programming Ruby 1.9 & 2.0](https://pragprog.com/book/ruby4/programming-ruby-1-9-2-0)
  - [The Rust Programming Language](https://doc.rust-lang.org/book/second-edition/)
  - [The Little Go Book](http://openmymind.net/The-Little-Go-Book/)
 
