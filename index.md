@@ -19,6 +19,7 @@ I'm *evuez* [everywhere](https://gitlab.com/u/evuez) [else](https://keybase.io/e
  - [Surely You're Joking, Mr. Feynman!](https://en.wikipedia.org/wiki/Surely_You%27re_Joking,_Mr._Feynman!)
  - [Learn You a Haskell](http://learnyouahaskell.com/)
  - [Elixir in Action](https://www.manning.com/books/elixir-in-action)
+ - [Stuff Goes Bad: Erlang in Anger](https://www.erlang-in-anger.com/)
  - [Python Essential Reference](http://www.dabeaz.com/per.html)
  - [Programming Ruby 1.9 & 2.0](https://pragprog.com/book/ruby4/programming-ruby-1-9-2-0)
  - [The Rust Programming Language](https://doc.rust-lang.org/book/second-edition/)
