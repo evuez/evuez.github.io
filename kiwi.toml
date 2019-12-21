@@ -1,0 +1,10 @@
+index.template = "templates/index.html"
+pages.template = "templates/page.html"
+
+[[source]]
+name = "Posts"
+path = "posts"
+
+[[source]]
+name = "Notes / TIL"
+path = "notes"

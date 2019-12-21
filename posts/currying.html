@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://github.com/evuez/">github</a> /
+    <a href="https://keybase.io/evuez">keybase</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Currying</h1>
+      <p>In Haskell, every function takes a <em>single parameter</em>. So how come you can do <code>max 3 6</code>? Or <code>map sqrt [1..9]</code>? Well there’s a trick, and it’s called <em>currying</em>. What happens when you do <code>max 3 6</code> is that you’re actually doing <code>(max 3) 6</code>.</p>
+<p>We can see this by looking at its declaration:</p>
+<pre><code>max :: (Ord a) =&gt; a -&gt; a -&gt; a
+</code></pre>
+<p>Which is the equivalent of:</p>
+<pre><code>max :: (Ord a) =&gt; a -&gt; (a -&gt; a)
+</code></pre>
+<p>As we can see in the second declaration, the <code>max</code> function takes a single parameter of type a and returns a function that takes another parameter of type a that finally returns a value of the same type. This kind of functions are called <em>curried functions</em>.</p>
+<p>Now what’s great with this is that it makes specialization really easy:</p>
+<pre><code>λ&gt; let maxThree = max 3
+λ&gt; maxThree 5
+5
+λ&gt; maxThree 2
+3
+λ&gt; let mapDivByTen = map (/10)
+λ&gt; mapDivByTen [1..3]
+[0.1,0.2,0.3]
+</code></pre>
+<p>The second example <code>mapDivByTen</code> demonstrates the use of currying with higher order functions:</p>
+<ol>
+<li>You first create a new function <code>(/10)</code> that takes a number and divides it by 10,</li>
+<li>Then you create another function with <code>map</code> that takes a list of numbers and divides them by 10,</li>
+<li>You now have a new, specialized function, that you can use on any list of numbers!</li>
+</ol>
+<p>It could also be written like this:</p>
+<pre><code>λ&gt; let divByTen = (/10)
+λ&gt; let mapDivByTen = map divByTen
+</code></pre>
+<p>So currying is nice because it allows to easily create new functions on the fly (specialization!) with a clean syntax. This is especially useful when dealing with higher order functions. Also, there’s no special case: every function just takes a single argument.</p>
+<p>Note that it differs from <em>partial application</em>: a curried function always takes a single parameter and always returns a function that takes a single parameter, so what you get is <em>a chain of unary functions</em>, whereas with partial application you can apply <code>n</code> parameters to your function and you’ll just get <em>a function that takes <code>arity-n</code> parameters</em>.</p>
+<p>In Haskell, <em>every</em> function is curried! 🎆</p>
+
+    </article>
+  </main>
+</body>
+</html>
