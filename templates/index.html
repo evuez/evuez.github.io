@@ -16,9 +16,17 @@
     <a href="https://keybase.io/evuez">keybase</a>
   </header>
   <main>
+    {{#sources}}
+    <h1>{{name}}</h1>
     <ul>
-      {index}
+      {{#pages}}
+        <li>
+          {{#meta.date}}{{meta.date}} -{{/meta.date}}
+          <a href="{{url}}">{{meta.title}}</a>
+        </li>
+      {{/pages}}
     </ul>
+    {{/sources}}
   </main>
 </body>
 </html>

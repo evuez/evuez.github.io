@@ -1,5 +1,4 @@
 title = "L'esprit de l'escalier"
-date = "2019-12-06"
 %%%
 
 From [Wikipedia](https://en.wikipedia.org/wiki/L'esprit_de_l'escalier):

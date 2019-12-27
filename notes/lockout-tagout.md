@@ -1,5 +1,4 @@
 title = "Lock Out, Tag Out"
-date = "2019-12-06"
 %%%
 
 A safety procedure used to ensure that a machine is properly shut off and can't unexpectedly energize.

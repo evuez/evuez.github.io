@@ -1,5 +1,4 @@
 title = "Galvanic anode / Sacrificial anode"
-date = "2019-12-06"
 %%%
 
 From [Wikipedia](https://en.wikipedia.org/wiki/Galvanic_anode):
