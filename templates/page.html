@@ -6,20 +6,23 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>evuez</title>
+  <title>evuez - {{meta.title}}</title>
 
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <header>
-    <a href="https://github.com/evuez/">github</a> /
+    <a href="https://github.com/evuez">github</a> /
     <a href="https://keybase.io/evuez">keybase</a>
   </header>
   <main>
     <a href="../index.html">index</a>
     <article>
-      <h1>{title}</h1>
-      {contents}
+      <h1>{{meta.title}}</h1>
+      {{#meta.date}}
+        <time datetime="{{meta.date}}">{{meta.date}}</time>
+      {{/meta.date}}
+      {{{body}}}
     </article>
   </main>
 </body>

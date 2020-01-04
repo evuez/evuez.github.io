@@ -26,7 +26,12 @@ header, main, footer {
 
 h1 {
   color: var(--white);
-  padding: 24px 0 16px 0;
+  margin: 24px 0 16px 0;
+}
+time {
+  display: block;
+  margin-bottom: 24px;
+  font-size: 0.8rem;
 }
 a { color: var(--primary); }
 a:visited { color: var(--secondary); }

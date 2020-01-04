@@ -6,19 +6,20 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>evuez</title>
+  <title>evuez - Currying</title>
 
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <header>
-    <a href="https://github.com/evuez/">github</a> /
+    <a href="https://github.com/evuez">github</a> /
     <a href="https://keybase.io/evuez">keybase</a>
   </header>
   <main>
     <a href="../index.html">index</a>
     <article>
       <h1>Currying</h1>
+        <time datetime="2017-03-30">2017-03-30</time>
       <p>In Haskell, every function takes a <em>single parameter</em>. So how come you can do <code>max 3 6</code>? Or <code>map sqrt [1..9]</code>? Well there’s a trick, and it’s called <em>currying</em>. What happens when you do <code>max 3 6</code> is that you’re actually doing <code>(max 3) 6</code>.</p>
 <p>We can see this by looking at its declaration:</p>
 <pre><code>max :: (Ord a) =&gt; a -&gt; a -&gt; a

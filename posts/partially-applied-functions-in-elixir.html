@@ -6,19 +6,20 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>evuez</title>
+  <title>evuez - Partially applied functions in Elixir</title>
 
   <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
   <header>
-    <a href="https://github.com/evuez/">github</a> /
+    <a href="https://github.com/evuez">github</a> /
     <a href="https://keybase.io/evuez">keybase</a>
   </header>
   <main>
     <a href="../index.html">index</a>
     <article>
       <h1>Partially applied functions in Elixir</h1>
+        <time datetime="2017-12-13">2017-12-13</time>
       <p>Thanks to the <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&amp;/1">capture operator</a> it’s easy to create partially applied functions in Elixir:</p>
 <pre><code>iex&gt; sum = fn (a, b) -&gt; a + b end
 iex&gt; sum.(1, 2)
