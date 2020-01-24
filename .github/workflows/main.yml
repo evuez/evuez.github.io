@@ -11,4 +11,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2.0.0
     - name: Run a one-line script
-      run: docker run -v $(pwd):/mnt/repo fedora /mnt/repo/.github/kiwi
+      run: docker run -v $(pwd):/mnt/repo fedora /bin/bash -c "cd /mnt/repo && .github/kiwi"
