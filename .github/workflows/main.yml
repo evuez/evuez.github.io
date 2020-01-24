@@ -9,4 +9,4 @@ jobs:
 
     steps:
     - name: Run a one-line script
-      run: ./github/kiwi
+      run: .github/kiwi
