@@ -11,4 +11,4 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2.0.0
     - name: Run a one-line script
-      run: .github/kiwi
+      run: docker run fedora .github/kiwi
