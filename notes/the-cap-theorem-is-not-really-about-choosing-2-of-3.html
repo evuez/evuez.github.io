@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - The CAP theorem isn&#39;t really about &quot;choosing 2 of 3&quot;</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://github.com/evuez">github</a> /
+    <a href="https://keybase.io/evuez">keybase</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>The CAP theorem isn&#39;t really about &quot;choosing 2 of 3&quot;</h1>
+      <p>When I first learned about the CAP therorem, I thought you <em>always</em> had to choose 2 of these 3 guarantees:</p>
+<ul>
+<li><strong>C</strong>onsistency,</li>
+<li><strong>A</strong>vailability,</li>
+<li><strong>P</strong>artition tolerance</li>
+</ul>
+<p>But that's not exactly right.</p>
+<p>First, you can't really pick <strong>C</strong>onsistency and <strong>A</strong>vailability: if you forfeit <strong>P</strong>artition tolerance, you basically loose both <strong>C</strong>onsistency and <strong>A</strong>vailability because you can't keep them in case of network partition. So you actually have to choose between <strong>CP</strong> and <strong>AP</strong>.</p>
+<p>But even that isn't completely true. Unless your network is unstable, you can have both <strong>C</strong>onsistency and <strong>A</strong>vailability <em>most of the time</em>. You don't need to choose between one of these as long as your network isn't partitioned.</p>
+<p>And even in case of network partition, you don't always have to choose the same guarantee: it might be benificial in somes cases to preserve <strong>C</strong>onsistency, while in some other it could be better to have <strong>A</strong>vailability.</p>
+
+    </article>
+  </main>
+</body>
+</html>
