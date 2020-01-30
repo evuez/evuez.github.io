@@ -2,6 +2,10 @@ index.template = "templates/index.html"
 pages.template = "templates/page.html"
 
 [[source]]
+name = "Projects"
+path = "projects"
+
+[[source]]
 name = "Posts"
 path = "posts"
 

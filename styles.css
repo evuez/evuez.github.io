@@ -43,8 +43,8 @@ ul, ol {
 li { padding: 4px 0; }
 code {
   color: var(--secondary);
-  font-size: 0.8rem;
-  line-height: 1.4rem;
+  font-size: 0.8em;
+  line-height: 1.4em;
   font-weight: thin;
 }
 blockquote {
