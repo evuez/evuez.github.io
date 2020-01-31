@@ -76,14 +76,10 @@ It's not too bad, but given my Megaparsec skills are not great, I ended up creat
 <p>This isn't a keyword list: <code>[{&quot;a&quot;, 1}]</code>. Nor this is: <code>[{:a, 1}, {&quot;b&quot;, 2}]</code> (the first element of every tuple must be an atom).</p>
 <p>These are both valid access syntax: <code>data[a: 1]</code> and <code>data[{:a, 1}]</code>. Do you think they are equivalent? Well, let's ask <code>quote</code>:</p>
 <pre><code>iex&gt; quote do: data[a: 1]
-{% raw %}
 {{:., [], [Access, :get]}, [], [{:data, [], Elixir}, [a: 1]]}
-{% endraw %}
 
 iex&gt; quote do: data[{:a, 1}]
-{% raw %}
 {{:., [], [Access, :get]}, [], [{:data, [], Elixir}, {:a, 1}]}
-{% endraw %}
 </code></pre>
 <p>So <code>data[{:a, 1}]</code> is probably what you'd expect: it's the same as <code>Access.get(data, {:a, 1})</code>.</p>
 <p>On the other hand, <code>data[a: 1]</code> might not be what you expected: it's equivalent to <code>Access.get(data, [a: 1])</code>, or <code>Access.get(data, [{:a, 1}])</code>.</p>
