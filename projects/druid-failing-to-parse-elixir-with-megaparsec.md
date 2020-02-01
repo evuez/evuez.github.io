@@ -5,7 +5,7 @@ title = "druid: Failing to parse Elixir with Megaparsec"
 
 Last year I spent some time trying to parse Elixir with [Megaparsec](https://github.com/mrkkrp/megaparsec).
 
-One of my colleague had started writing an LR(1) parser for Elixir in Rust, and I thought it'd be fun to write one with a parser combinator so we could compare our implementations.
+One of my colleague had started writing a parser for Elixir in Rust using [lalrpop](https://github.com/lalrpop/lalrpop), and I thought it'd be fun to write one with a parser combinator so we could compare our implementations.
 
 We never got to that point. Turns out, the Elixir syntax is not as simple as you might think.
 
@@ -102,7 +102,7 @@ iex> quote do: data[{:a, 1}]
 
 So `data[{:a, 1}]` is probably what you'd expect: it's the same as `Access.get(data, {:a, 1})`.
 
-On the other hand, `data[a: 1]` might not be what you expected: it's equivalent to `Access.get(data, [a: 1])`, or `Access.get(data, [{:a, 1}])`.
+On the other hand, `data[a: 1]` might not be what you expected: it's equivalent to `data[[a: 1]]`, `Access.get(data, [a: 1])`, or `Access.get(data, [{:a, 1}])`.
 
 Hopefully I don't need more examples for this one: parsing keywords lists is **hard**.
 

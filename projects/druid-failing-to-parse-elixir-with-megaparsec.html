@@ -22,7 +22,7 @@
       <h1>druid: Failing to parse Elixir with Megaparsec</h1>
       <p><a href="https://github.com/evuez/druid/">Repo</a></p>
 <p>Last year I spent some time trying to parse Elixir with <a href="https://github.com/mrkkrp/megaparsec">Megaparsec</a>.</p>
-<p>One of my colleague had started writing an LR(1) parser for Elixir in Rust, and I thought it'd be fun to write one with a parser combinator so we could compare our implementations.</p>
+<p>One of my colleague had started writing a parser for Elixir in Rust using <a href="https://github.com/lalrpop/lalrpop">lalrpop</a>, and I thought it'd be fun to write one with a parser combinator so we could compare our implementations.</p>
 <p>We never got to that point. Turns out, the Elixir syntax is not as simple as you might think.</p>
 <p>To be clear, my failure to parse Elixir has nothing to do with Megaparsec: I'm sure anyone with a decent knowledge of it would have no problem solving the many issues I faced. But having spent many hours trying to solve these issues, I now have a greater appreciation for all the effort that has been put into making the Elixir syntax so easy to pick up.</p>
 <p>So this is a list of syntax quirks I learned about while writing this parser. Some of these might be obvious, but hopefully you'll still learn a thing or two while reading this.</p>
@@ -83,7 +83,7 @@ iex&gt; quote do: data[{:a, 1}]
 {{:., [], [Access, :get]}, [], [{:data, [], Elixir}, {:a, 1}]}
 </code></pre>
 <p>So <code>data[{:a, 1}]</code> is probably what you'd expect: it's the same as <code>Access.get(data, {:a, 1})</code>.</p>
-<p>On the other hand, <code>data[a: 1]</code> might not be what you expected: it's equivalent to <code>Access.get(data, [a: 1])</code>, or <code>Access.get(data, [{:a, 1}])</code>.</p>
+<p>On the other hand, <code>data[a: 1]</code> might not be what you expected: it's equivalent to <code>data[[a: 1]]</code>, <code>Access.get(data, [a: 1])</code>, or <code>Access.get(data, [{:a, 1}])</code>.</p>
 <p>Hopefully I don't need more examples for this one: parsing keywords lists is <strong>hard</strong>.</p>
 <h2>And more...</h2>
 <p>There are many other things you have to be careful about when parsing Elixir. You can check out <a href="https://github.com/evuez/druid/blob/2baec508b0cba8e4371ccc054c6b91f864d9d2ba/test/Spec.hs">the tests</a> I wrote for my incomplete parser for a more extensive list.</p>
