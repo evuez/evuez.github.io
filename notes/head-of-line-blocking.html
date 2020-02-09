@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Head-of-line blocking</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://github.com/evuez">github</a> /
+    <a href="https://keybase.io/evuez">keybase</a> /
+    <a href="mailto:helloevuez@gmail.com">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Head-of-line blocking</h1>
+      <p>Head-of-line blocking occurs when a small number of slow requests / packets holds up subsequent requests.</p>
+<ul>
+<li>Optimizing slow requests is important as they might slow down a long line of fast ones,</li>
+<li>Measuring response time on the client side can help catching these issues (as the processing time on the server wouldn't account for the time spent waiting for prior requests to complete).</li>
+</ul>
+<p><a href="https://en.wikipedia.org/wiki/Head-of-line_blocking">Head-of-line blocking on Wikipedia</a>.</p>
+
+    </article>
+  </main>
+</body>
+</html>
