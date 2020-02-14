@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+pdflatex "\def\formula{$1}\input{formula.tex}"
+
+convert -density 300 formula.pdf -quality 90 formula.png
+
+rm formula.aux formula.log formula.pdf
