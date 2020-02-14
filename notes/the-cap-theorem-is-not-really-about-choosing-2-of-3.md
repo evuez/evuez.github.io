@@ -12,4 +12,4 @@ First, you can't really pick **C**onsistency and **A**vailability: if you forfei
 
 But even that isn't completely true. Unless your network is unstable, you can have both **C**onsistency and **A**vailability _most of the time_. You don't need to choose between one of these as long as your network isn't partitioned.
 
-And even in case of network partition, you don't always have to choose the same guarantee: it might be benificial in somes cases to preserve **C**onsistency, while in some other it could be better to have **A**vailability.
+And even in case of network partition, you don't always have to choose the same guarantee: it might be benificial in some cases to preserve **C**onsistency, while in some other it could be better to have **A**vailability.
