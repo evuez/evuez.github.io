@@ -51,7 +51,7 @@ li { padding: 4px 0; }
 pre {
   white-space: pre-wrap;
 }
-code {
+code, math {
   color: var(--secondary);
   line-height: 1.4em;
   font-weight: thin;

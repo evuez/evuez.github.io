@@ -1,7 +1,23 @@
 #!/usr/bin/env bash
 
-pdflatex "\def\formula{$1}\input{formula.tex}"
+function render {
+  file=$1
+  formula=$2
+  image=$(echo $formula | md5sum | cut -f1 -d' ')
 
-convert -density 300 formula.pdf -quality 90 formula.png
+  pdflatex "\def\formula{$formula}\input{bin/formula.tex}" > /dev/null 2>&1
+  convert -density 300 formula.pdf -resize x22 -quality 100 formula.png
+  mv formula.png "./assets/$image.png"
+
+  perl -pi -e "s/\Q(($formula))/\<img src=\"..\/assets\/$image.png\" alt=\"$formula\"\>/g" -- $file
+}
+
+rm assets/*
+
+find ./notes ./posts ./projects -name '*.html' | while read file; do
+  grep -oP '\(\(\K[^\)]+' $file | while read -r formula; do
+    render "$file" "$formula"
+  done
+done
 
 rm formula.aux formula.log formula.pdf
