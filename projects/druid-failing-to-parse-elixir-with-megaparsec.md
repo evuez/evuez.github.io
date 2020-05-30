@@ -42,7 +42,7 @@ It makes it kind of hard to know where you can ignore spaces and where you can't
 
 ## Line breaks and semicolons
 
-Remember when I said `data\n[:a]` is just a block of code with to separate statements? Well that's true, but it isn't _always_ true. It depends on what's at the end of your first line or at the start of your second line.
+Remember when I said `data\n[:a]` is just a block of code with two separate statements? Well that's true, but it isn't _always_ true. It depends on what's at the end of your first line or at the start of your second line.
 
 ```
 a
