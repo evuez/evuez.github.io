@@ -71,7 +71,7 @@ is different from
 a
 + 1
 ```
-because the unary `+` as higher precedence than the binary `+`. This last example is the same as `a; +1`.
+because the unary `+` has higher precedence than the binary `+`. This last example is the same as `a; +1`.
 
 Long pipelines look nice when you can split them over multiple lines, and I don't miss having to add a semicolon to the end of every statement. But it's definitely not something that comes for free in a parser.
 

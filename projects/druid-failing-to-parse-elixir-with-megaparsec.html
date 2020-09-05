@@ -65,7 +65,7 @@
 <pre><code>a
 + 1
 </code></pre>
-<p>because the unary <code>+</code> as higher precedence than the binary <code>+</code>. This last example is the same as <code>a; +1</code>.</p>
+<p>because the unary <code>+</code> has higher precedence than the binary <code>+</code>. This last example is the same as <code>a; +1</code>.</p>
 <p>Long pipelines look nice when you can split them over multiple lines, and I don't miss having to add a semicolon to the end of every statement. But it's definitely not something that comes for free in a parser.</p>
 <h2>Structs and maps updates with <code>|</code></h2>
 <p><code>|</code> is defined as a <a href="https://hexdocs.pm/elixir/master/operators.html#defining-custom-operators">custom, overridable binary operator</a>, but it's also used as a special operator in the update syntax for <a href="https://hexdocs.pm/elixir/Map.html">maps and structs</a>.</p>

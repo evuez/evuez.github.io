@@ -20,7 +20,7 @@ Let's write some Elixir.
 
 Not very useful, but that's good enough for our purpose.
 
-I like Elixir, but I think most of the time it just looks like functional Ruby. I want to make this code looks like Elixir.
+I like Elixir, but I think most of the time it just looks like functional Ruby. I want to make this code look like Elixir.
 
 First, this code is lacking every Elixir developer's best friend: `|>`. Let's add some `|>`s.
 
