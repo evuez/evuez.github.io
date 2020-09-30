@@ -1,4 +1,5 @@
 title = "delilah: GitHub status updates in Slack"
+date = 2020-01-30
 %%%
 
 [Repo](https://github.com/evuez/delilah)
