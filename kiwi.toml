@@ -1,5 +1,6 @@
-index.template = "templates/index.html"
-pages.template = "templates/page.html"
+[templates]
+index = "templates/index.html"
+pages = "templates/page.html"
 
 [[source]]
 name = "Projects"

@@ -133,3 +133,8 @@ You know what's also very Elixir-y? Lists. Lists and tuples.
     )}])
 
 Who's going to say this looks like Ruby now? ⚗️
+
+---
+
+[discussion on hackernews](https://news.ycombinator.com/item?id=24818706) /
+[discussion on reddit](https://www.reddit.com/r/elixir/comments/jd2hr4/cursed_elixir/)

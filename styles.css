@@ -35,6 +35,11 @@ h2 {
   margin: 12px 0 8px 0;
   font-size: 1.3em;
 }
+hr {
+  border: 0;
+  height: 1px;
+  background-color: var(--grey);
+}
 time {
   display: block;
   margin-bottom: 24px;
