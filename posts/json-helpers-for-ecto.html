@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Postgres JSON(B) helpers for Ecto</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://github.com/evuez">github</a> /
+    <a href="https://keybase.io/evuez">keybase</a> /
+    <a href="mailto:helloevuez@gmail.com">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Postgres JSON(B) helpers for Ecto</h1>
+        <time datetime="2020-11-18">2020-11-18</time>
+      <p>If you've ever worked with JSON columns in Postgres with Ecto, you probably wrote a lot of <a href="https://hexdocs.pm/ecto/Ecto.Query.API.html#fragment/1"><code>fragment</code></a>s similar to this one:</p>
+<pre><code>fragment(&quot;?-&gt;&gt;'field'&quot;, x.column)
+</code></pre>
+<p>to access fields in a JSON object.</p>
+<p>This is nice, but what if we could write <code>x.column-&gt;&gt;field</code> directly instead?</p>
+<p>Well we can! We just have to define a custom operator for this. Elixir has a list of <a href="https://hexdocs.pm/elixir/operators.html#defining-custom-operators">overridable operators</a>, and even though there's no <code>-&gt;&gt;</code>, there's <code>~&gt;&gt;</code> which looks similar enough.</p>
+<pre><code>defmodule JsonAccessor do
+  defmacro left ~&gt;&gt; right do
+    quote do: fragment(&quot;?-&gt;&gt;?&quot;, unquote(left), unquote(right))
+  end
+end
+</code></pre>
+<p>You can then <code>import JsonAccessor</code> and start using this new operator:</p>
+<pre><code>Repo.all(from u in User, where: u.details~&gt;&gt;&quot;email&quot; == &quot;user@example.com&quot;)
+</code></pre>
+<p>This works but... it's far from perfect:</p>
+<pre><code>x.column ~&gt;&gt; &quot;field&quot; # Works
+x.column ~&gt;&gt; field # Raises &quot;(Ecto.Query.CompileError) unbound variable `field` in query.&quot;
+</code></pre>
+<p>We also can't query nested fields without the <a href="https://www.postgresql.org/docs/9.5/functions-json.html"><code>-&gt;</code></a> operator:</p>
+<pre><code>x.column ~&gt;&gt; &quot;field&quot; ~&gt;&gt; &quot;nested&quot; # Won't work because `-&gt;&gt;` returns text instead of a JSON object
+</code></pre>
+<p>We can fix the first issue by converting the right-hand side to a string when we're given an atom:</p>
+<pre><code>defmodule JsonAccessor do
+  defmacro left ~&gt;&gt; right do
+    quote do: fragment(&quot;?-&gt;&gt;?&quot;, unquote(left), unquote(rhs(right)))
+  end
+
+  defp rhs({field, _ctx, nil}) when is_atom(field), do: to_string(field)
+  defp rhs(field) when is_binary(field), do: field
+end
+</code></pre>
+<p>Now <code>x.column ~&gt;&gt; field</code> works as expected. For the nested access, we just need to add a new operator for <code>-&gt;</code>:</p>
+<pre><code>defmodule JsonAccessor do
+  defmacro left ~&gt;&gt; right do
+    quote do: fragment(&quot;?-&gt;&gt;?&quot;, unquote(left), unquote(rhs(right)))
+  end
+
+  defmacro left ~&gt; right do
+    quote do: fragment(&quot;?-&gt;?&quot;, unquote(left), unquote(rhs(right)))
+  end
+
+  defp rhs({field, _ctx, nil}) when is_atom(field), do: to_string(field)
+  defp rhs(field) when is_binary(field), do: field
+end
+</code></pre>
+<p>And we can now write <code>x.column~&gt;field~&gt;&gt;nested == &quot;value&quot;</code>, instead of <code>fragment(&quot;?-&gt;'field'-&gt;&gt;'nested' = ?&quot;, x.column, &quot;value&quot;)</code> 🎉</p>
+
+    </article>
+  </main>
+</body>
+</html>

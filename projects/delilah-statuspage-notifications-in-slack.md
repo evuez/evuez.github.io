@@ -1,5 +1,6 @@
 title = "delilah: GitHub status updates in Slack"
 date = 2020-01-30
+tags = ["haskell"]
 %%%
 
 [Repo](https://github.com/evuez/delilah)

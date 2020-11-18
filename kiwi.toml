@@ -1,3 +1,7 @@
+name = "evuez"
+home = "https://evuez.github.io"
+author = "evuez"
+
 [templates]
 index = "templates/index.html"
 pages = "templates/page.html"

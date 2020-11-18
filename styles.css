@@ -76,6 +76,3 @@ blockquote > ul,
 blockquote > ol {
   padding-left: 0;
 }
-
-ul.index__links { list-style: none; }
-li.index__link { padding: 3px 0; }

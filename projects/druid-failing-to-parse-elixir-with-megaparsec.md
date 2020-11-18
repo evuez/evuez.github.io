@@ -1,5 +1,6 @@
 title = "druid: Failing to parse Elixir with Megaparsec"
 date = 2020-01-31
+tags = ["haskell", "elixir"]
 %%%
 
 [Repo](https://github.com/evuez/druid/)

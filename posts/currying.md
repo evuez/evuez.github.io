@@ -1,5 +1,6 @@
 title = "Currying"
 date = 2017-03-30
+tags = ["haskell"]
 %%%
 
 In Haskell, every function takes a *single parameter*. So how come you can do `max 3 6`? Or `map sqrt [1..9]`? Well there’s a trick, and it’s called *currying*. What happens when you do `max 3 6` is that you’re actually doing `(max 3) 6`.

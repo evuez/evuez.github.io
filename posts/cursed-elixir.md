@@ -1,5 +1,6 @@
 title = "Cursed Elixir"
 date = 2020-08-12
+tags = ["elixir"]
 %%%
 
 Let's write some Elixir.

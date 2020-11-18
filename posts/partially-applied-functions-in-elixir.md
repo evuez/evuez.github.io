@@ -1,5 +1,6 @@
 title = "Partially applied functions in Elixir"
 date = 2017-12-13
+tags = ["elixir"]
 %%%
 Thanks to the [capture operator](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1) it’s easy to create partially applied functions in Elixir:
 
