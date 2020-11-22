@@ -15,6 +15,6 @@ It can be configured with any service using Statuspage and will post a message i
 
 It's a pretty simple [Scotty](https://github.com/scotty-web/scotty) app -- it's basically forwarding requests from Statuspage to Slack -- but it was really fun to write, and proved to be quite useful!
 
---
+---
 
 P.S.: if you're wondering about the name, Delilah is a character in [Firewatch](https://firewatch.fandom.com/wiki/Delilah).

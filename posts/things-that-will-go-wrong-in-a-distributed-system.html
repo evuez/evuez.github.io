@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Things that will go wrong in a distributed system</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://github.com/evuez">github</a> /
+    <a href="https://keybase.io/evuez">keybase</a> /
+    <a href="mailto:julien@liftm.io">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Things that will go wrong in a distributed system</h1>
+        <time datetime="2020-11-22">2020-11-22</time>
+      <p>A (very) incomplete list of things that will go wrong in any distributed system.</p>
+<p>Feel free to <a href="https://github.com/evuez/evuez.github.io/blob/master/posts/things-that-will-go-wrong-in-a-distributed-system.md">submit a PR</a> to add more failure cases to this list.</p>
+<h1>Network</h1>
+<ul>
+<li>The network will be partitioned</li>
+<li>Latency will grow more than expected</li>
+<li>Timeouts will happen on nodes that are alive</li>
+<li>Your network bandwidth is limited, and you will hit that limit</li>
+</ul>
+<h1>Time</h1>
+<ul>
+<li>Clocks will go backward</li>
+<li>Monotonic clocks will go backward <a href="https://rachelbythebay.com/w/2020/10/20/ticktock/">[1]</a>, <a href="https://github.com/rust-lang/rust/pull/56988">[2]</a></li>
+<li>Clocks will be out of sync, by more than a few seconds sometimes</li>
+<li>Your NTP server will die</li>
+<li>You will have timezone issues</li>
+</ul>
+<h1>Hardware</h1>
+<ul>
+<li><a href="http://static.googleusercontent.com/media/research.google.com/en//archive/disk_failures.pdf">HDDs will fail</a></li>
+<li><a href="https://arxiv.org/pdf/1901.03401.pdf">RAMs will fail</a></li>
+<li><a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/eurosys84-nightingale.pdf">CPUs will fail</a></li>
+</ul>
+<h1>Databases</h1>
+<ul>
+<li>Without <a href="https://wiki.postgresql.org/wiki/SSI">SSI</a>, you will have inconsistencies</li>
+<li>Without <a href="https://wiki.postgresql.org/wiki/SSI">SSI</a>, you will lose data</li>
+<li>Without a proper consensus, you will have more than one leader</li>
+<li>Without <a href="https://en.wikipedia.org/wiki/Linearizability">linearizability</a>, clients will time travel</li>
+<li>Without <a href="https://en.wikipedia.org/wiki/Two-phase_commit_protocol">2PC</a>, you will have inconsistencies</li>
+</ul>
+
+    </article>
+  </main>
+</body>
+</html>
