@@ -34,3 +34,7 @@ Feel free to [submit a PR](https://github.com/evuez/evuez.github.io/blob/master/
  - Without a proper consensus, you will have more than one leader
  - Without [linearizability](https://en.wikipedia.org/wiki/Linearizability), clients will time travel
  - Without [2PC](https://en.wikipedia.org/wiki/Two-phase_commit_protocol), you will have inconsistencies
+
+---
+
+[discussion on reddit](https://www.reddit.com/r/programming/comments/jysyri/things_that_will_go_wrong_in_a_distributed_system/)
