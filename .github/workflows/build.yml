@@ -1,0 +1,43 @@
+name: Publish
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Stack
+      uses: mstksg/setup-stack@v2
+      env:
+        ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+    - name: Clone kiwi
+      run: git clone https://github.com/evuez/kiwi.git
+
+    - name: Cache build
+      id: cache-build
+      uses: actions/cache@v1
+      with:
+        path: ~/.stack
+        key: ${{ runner.os }}-stack-home
+
+    - name: Install kiwi
+      run: stack install
+      working-directory: ./kiwi
+
+    - name: Generate contents
+      run: kiwi
+
+    - name: Publish
+      run: |
+        rm -r kiwi/
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add .
+        git commit --allow-empty --allow-empty-message -m ''
+        git push origin HEAD:live
+      working-directory: ./
