@@ -32,6 +32,7 @@ Feel free to [submit a PR](https://github.com/evuez/evuez.github.io/blob/master/
  - Without [SSI](https://wiki.postgresql.org/wiki/SSI), you will have inconsistencies
  - Without [SSI](https://wiki.postgresql.org/wiki/SSI), you will lose data
  - Without a proper consensus, you will have more than one leader
+ - With a proper concensus algorithm, you will have [issues too](https://decentralizedthoughts.github.io/2020-12-12-raft-liveness-full-omission/)
  - Without [linearizability](https://en.wikipedia.org/wiki/Linearizability), clients will time travel
  - Without [2PC](https://en.wikipedia.org/wiki/Two-phase_commit_protocol), you will have inconsistencies
 
