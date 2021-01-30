@@ -38,7 +38,7 @@ The most (and only?) important thing we need to know in order to implement this 
 
 Now that we have this, let's write this `curry` function!
 
-    defmodule Curry do
+    defmodule Func do
       def curry(fun) when is_function(fun) do
         {:arity, arity} = :erlang.fun_info(fun, :arity)
         curry(fun, arity, [])
