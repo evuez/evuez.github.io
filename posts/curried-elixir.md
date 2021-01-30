@@ -1,6 +1,6 @@
 title = "Curried Elixir"
 tags = ["elixir"]
-date = 2021-01-30
+date = 2021-01-28
 %%%
 
 Elixir already supports [partially applied functions](https://liftm.io/posts/partially-applied-functions-in-elixir.html) thanks to the [capture operator](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1), and partial application is nice. But you know what's even better? [Currying](https://liftm.io/posts/currying.html)!

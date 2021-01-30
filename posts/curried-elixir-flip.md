@@ -1,6 +1,6 @@
 title = "Curried Elixir: Flip"
 tags = ["elixir"]
-date = 2021-01-30
+date = 2021-01-29
 %%%
 
 In the [previous post](https://liftm.io/posts/curried-elixir.html), we implemented a `curry` function for Elixir:
