@@ -1,4 +1,5 @@
 title = "The CAP theorem isn't really about \"choosing 2 of 3\""
+date = 2020-01-26
 %%%
 When I first learned about the CAP theorem, I thought you _always_ had to choose 2 of these 3 guarantees:
 
