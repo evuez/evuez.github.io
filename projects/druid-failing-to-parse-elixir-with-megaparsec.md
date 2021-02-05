@@ -36,7 +36,7 @@ If you don't know what came before a `[` when you reach it, you can't decide whe
 
 ## Function application: parens or spaces?
 
-Being able to write `def foo(:bar) do...` instead of `def(foo(:bar)) do...` is pretty nice, but making sense of this syntax to try to parse it really isn't.
+Being able to write `def foo(:bar) do...` instead of `def(foo(:bar), do: ...)` is pretty nice, but making sense of this syntax to try to parse it really isn't.
 
 For example, `foo (a)` is valid but `foo (a, b)` isn't.
 
