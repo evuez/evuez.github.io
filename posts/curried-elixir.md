@@ -31,16 +31,16 @@ We're going to do this by wrapping `my_fun` in a chain of anonymous functions, e
         end
       end
 
-The most (and only?) important thing we need to know in order to implement this `curry` function is the arity of the function we are given. We can use [`:erlang.fun_info/2`](https://erlang.org/doc/man/erlang.html#fun_info-2) for this:
+The most (and only?) important thing we need to know in order to implement this `curry` function is the arity of the function we are given. We can use [`Function.info/2`](https://hexdocs.pm/elixir/master/Function.html#info/2) for this:
 
-    iex> :erlang.fun_info(fn x, y -> x * y end, :arity)
+    iex> Function.info(fn x, y -> x * y end, :arity)
     {:arity, 2}
 
 Now that we have this, let's write this `curry` function!
 
     defmodule Func do
       def curry(fun) when is_function(fun) do
-        {:arity, arity} = :erlang.fun_info(fun, :arity)
+        {:arity, arity} = Function.info(fun, :arity)
         curry(fun, arity, [])
       end
 
