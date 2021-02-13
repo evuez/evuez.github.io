@@ -106,14 +106,14 @@ With [`Code.eval_quoted/2`](https://hexdocs.pm/elixir/Code.html#eval_quoted/3), 
         params = Macro.generate_unique_arguments(arity, nil)
         body_ast = {{:., [], [{:fun, [], nil}]}, [], params}
 
-        curried_ast =
+        {curried_fun, _} =
           params
           |> Enum.reverse()
           |> Enum.reduce(body_ast, fn arg, acc ->
             {:fn, [], [{:->, [], [[arg], acc]}]}
           end)
+          |> Code.eval_quoted(fun: fun)
 
-        {curried_fun, _} = Code.eval_quoted(curried_ast, fun: fun)
         curried_fun
       end
     end
