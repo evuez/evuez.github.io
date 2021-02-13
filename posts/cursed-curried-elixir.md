@@ -97,7 +97,7 @@ This is actually pretty easy: [`Function.info/1`](https://hexdocs.pm/elixir/mast
 With [`Macro.to_string/1`](https://hexdocs.pm/elixir/Macro.html#to_string/2):
 
     iex> Macro.to_string(make_call(&Map.get/2))
-    "fun.(arg1, arg2)"
+    "Elixir.Map.get(arg1, arg2)"
 
 So we can now generate the AST for a chain of unary functions, and the AST for an anonymous function call. We need to do something with all these tuples now!
 
