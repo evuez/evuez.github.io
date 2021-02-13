@@ -53,7 +53,7 @@ We want this function to take as arguments the length of the chain and the body 
 
     def make_chain(length_, body) do
       Enum.reduce(1..length_, body, fn x, acc ->
-        {:fn, [], [{:->, [], [[{:"arg#{x}", [], Elixir}], acc]}]}
+        {:fn, [], [{:->, [], [[{:"arg#{x}", [], nil}], acc]}]}
       end)
     end
 
@@ -62,7 +62,7 @@ Or better, use [`Macro.generate_unique_arguments/2`](https://hexdocs.pm/elixir/M
     defmodule Func do
       def make_chain(length_, body) do
         length_
-        |> Macro.generate_unique_arguments(Elixir)
+        |> Macro.generate_unique_arguments(nil)
         |> Enum.reverse() # Without this, the outermost function would get the last argument, which could make things confusing
         |> Enum.reduce(body, fn arg, acc ->
           {:fn, [], [{:->, [], [[arg], acc]}]}
@@ -86,7 +86,7 @@ All we need is [`Macro.generate_unique_arguments/2`](https://hexdocs.pm/elixir/M
 
     iex> fun = &Map.get/2
     iex> {:arity, arity} = Function.info(fun, :arity)
-    iex> params = Macro.generate_unique_arguments(arity, Elixir)
+    iex> params = Macro.generate_unique_arguments(arity, nil)
     iex> Macro.to_string({{:., [], [{:fun, [], nil}]}, [], params})
     "fun.(arg1, arg2)"
 
@@ -96,14 +96,14 @@ We now know how to generate the AST for our curried function. For the next step,
 
 If you're scared of [`defmacro/2`](https://hexdocs.pm/elixir/Kernel.html#defmacro/2) and [`unquote/1`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote/1), don't worry. We don't need any of that. Everyone knows macros are scary.
 
-You know what's not scary? Runtime evaluation!
+You know what's not scary? *Runtime evaluation!*
 
 With [`Code.eval_quoted/2`](https://hexdocs.pm/elixir/Code.html#eval_quoted/3), we should finally be able to write our `curry` function:
 
     defmodule Func do
       def curry(fun) do
         {:arity, arity} = Function.info(fun, :arity)
-        params = Macro.generate_unique_arguments(arity, Elixir)
+        params = Macro.generate_unique_arguments(arity, nil)
         body_ast = {{:., [], [{:fun, [], nil}]}, [], params}
 
         curried_ast =
