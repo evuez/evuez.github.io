@@ -45,6 +45,9 @@ This might look a bit messy, but there really isn't much going on:
           {:fn , [], # Right-hand side of `->`, the body of the anonymous function
            ...
 
+
+## Building the AST
+
 Just to get started, let's see if we can write a function that generates this AST for us.
 We want this function to take as arguments the length of the chain and the body of the innermost function in the chain:
 
@@ -74,42 +77,34 @@ We can use [`Macro.to_string/1`](https://hexdocs.pm/elixir/Macro.html#to_string/
 
 Perfect! 🎉
 
-We still have a few things to do before we start rewriting our `curry` function. First, we need to find a way to generate the AST for the function call:
+We have one thing left to do before we can start rewriting `curry`: we need to generate the AST to call `fun`. This is actually pretty easy:
 
-    iex> make_call(&Map.get/2)
-    {{:., [], [{:__aliases__, [alias: false], [:Map]}, :get]}, [],
-     [{:arg1, [], Elixir}, {:arg2, [], Elixir}]}
+    iex> quote do: fun.(a, b)
+    {{:., [], [{:fun, [], Elixir}]}, [], [{:a, [], Elixir}, {:b, [], Elixir}]}
 
+All we need is [`Macro.generate_unique_arguments/2`](https://hexdocs.pm/elixir/Macro.html#generate_unique_arguments/2) and [`Function.info/2`](https://hexdocs.pm/elixir/master/Function.html#info/2) to get the arity of `fun`:
 
-This is actually pretty easy: [`Function.info/1`](https://hexdocs.pm/elixir/master/Function.html#info/1) and [`Macro.generate_unique_arguments/2`](https://hexdocs.pm/elixir/Macro.html#generate_unique_arguments/2) can do most of the work for us:
+    iex> fun = &Map.get/2
+    iex> {:arity, arity} = Function.info(fun, :arity)
+    iex> params = Macro.generate_unique_arguments(arity, Elixir)
+    iex> Macro.to_string({{:., [], [{:fun, [], nil}]}, [], params})
+    "fun.(arg1, arg2)"
 
-    def make_call(fun) do
-      info = Function.info(fun)
+## Evaluating the AST
 
-      arity = Keyword.fetch!(info, :arity)
-      mod = Keyword.fetch!(info, :module)
-      name = Keyword.fetch!(info, :name)
+We now know how to generate the AST for our curried function. For the next step, we need to figure out how to use it!
 
-      {{:., [], [{:__aliases__, [alias: false], [mod]}, name]}, [],
-       Macro.generate_unique_arguments(arity, Elixir)}
-    end
+If you're scared of [`defmacro/2`](https://hexdocs.pm/elixir/Kernel.html#defmacro/2) and [`unquote/1`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote/1), don't worry. We don't need any of that. Everyone knows macros are scary.
 
-With [`Macro.to_string/1`](https://hexdocs.pm/elixir/Macro.html#to_string/2):
-
-    iex> Macro.to_string(make_call(&Map.get/2))
-    "Elixir.Map.get(arg1, arg2)"
-
-So we can now generate the AST for a chain of unary functions, and the AST for an anonymous function call. We need to do something with all these tuples now!
-
-If you're scared of [`defmacro/2`](https://hexdocs.pm/elixir/Kernel.html#defmacro/2) and [`unquote/1`](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote/1), don't worry. We don't need any of that. Everyone knows macros are scary. You know what's not scary? Runtime evaluation!
+You know what's not scary? Runtime evaluation!
 
 With [`Code.eval_quoted/2`](https://hexdocs.pm/elixir/Code.html#eval_quoted/3), we should finally be able to write our `curry` function:
 
     defmodule Func do
       def curry(fun) do
-        info = Function.info(fun)
-        params = Macro.generate_unique_arguments(info[:arity], Elixir)
-        body_ast = body_ast(info[:module], info[:name], params)
+        {:arity, arity} = Function.info(fun, :arity)
+        params = Macro.generate_unique_arguments(arity, Elixir)
+        body_ast = {{:., [], [{:fun, [], nil}]}, [], params}
 
         curried_ast =
           params
@@ -118,28 +113,16 @@ With [`Code.eval_quoted/2`](https://hexdocs.pm/elixir/Code.html#eval_quoted/3), 
             {:fn, [], [{:->, [], [[arg], acc]}]}
           end)
 
-        {curried_fun, _} = Code.eval_quoted(curried_ast)
+        {curried_fun, _} = Code.eval_quoted(curried_ast, fun: fun)
         curried_fun
-      end
-
-      defp body_ast(mod, name, params) do
-        {{:., [], [mod_ast(mod), name]}, [], params}
-      end
-
-      defp mod_ast(mod) do
-        # Module names like `:erlang` or `:code` need a different AST
-        case to_string(mod) do
-          "Elixir." <> _ -> {:__aliases__, [alias: false], [mod]}
-          _ -> mod
-        end
       end
     end
 
 Does it work?
 
-    iex> curried_length = Func.curry(&length/1)
+    iex> curried_sum = Func.curry(fn x, y -> x + y end)
     #Function<...>
-    iex> curried_length.([1, 2, 3])
+    iex> curried_sum.(1).(2)
     3
     iex> Func.curry(&Map.get/2).(%{foo: "bar"}).(:foo)
     "bar"
