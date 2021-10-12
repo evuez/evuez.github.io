@@ -84,4 +84,5 @@ blockquote > ol {
   color: var(--black);
   padding: 2px;
   opacity: 0.2;
+  margin-right: 4px;
 }
