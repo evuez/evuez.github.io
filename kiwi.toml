@@ -7,13 +7,14 @@ index = "templates/index.html"
 pages = "templates/page.html"
 
 [[source]]
-name = "Projects"
-path = "projects"
-
-[[source]]
 name = "Posts"
 path = "posts"
 
 [[source]]
-name = "Notes / TIL"
+name = "Notes"
 path = "notes"
+
+[[source]]
+name = "Projects"
+path = "projects"
+
