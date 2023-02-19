@@ -1,10 +1,21 @@
 :root {
-  --grey: #eaf2ef;
-  --black: #050505;
-  --white: #fff;
-  --primary: #ff0077;
-  --secondary: #f7b2bd;
+  --background: #fbfffe;
+  --text-soft: #121420;
+  --text: #000;
+  --primary: #00f;
+  --secondary: #4f1a93;
 }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #050505;
+    --text-soft: #eaf2ef;
+    --text: #fff;
+    --primary: #ff0077;
+    --secondary: #f7b2bd;
+  }
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -12,24 +23,24 @@
 }
 body {
   font-family: monospace;
-  background-color: var(--black);
-  color: var(--grey);
+  background-color: var(--background);
+  color: var(--text-soft);
   font-size: 14px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  line-height: 1.6rem;
+  line-height: 1.2rem;
 }
 header, main, footer {
   max-width: 800px;
-  padding: 24px;
+  padding: 12px;
 }
 
 h1, h2 {
-  color: var(--white);
+  color: var(--text);
 }
 h1 {
-  margin: 24px 0 16px 0;
+  margin: 12px 0 8px 0;
   font-size: 1.3em;
 }
 h2 {
@@ -39,7 +50,7 @@ h2 {
 hr {
   border: 0;
   height: 1px;
-  background-color: var(--grey);
+  background-color: var(--text-soft);
 }
 time {
   display: block;
@@ -50,7 +61,7 @@ a { color: var(--primary); }
 a:visited { color: var(--secondary); }
 p { padding: 12px 0; }
 ul, ol {
-  padding: 8px 0 8px 16px;
+  padding: 6px 0 6px 16px;
   list-style-position: inside;
 }
 li { padding: 4px 0; }
@@ -81,7 +92,7 @@ blockquote > ol {
 .tag {
   font-size: .6rem;
   background-color: var(--primary);
-  color: var(--black);
+  color: var(--background);
   padding: 2px;
   opacity: 0.2;
   margin-right: 4px;
