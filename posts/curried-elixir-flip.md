@@ -3,7 +3,7 @@ tags = ["elixir"]
 date = 2021-01-29
 %%%
 
-In the [previous post](https://liftm.io/posts/curried-elixir.html), we implemented a `curry` function for Elixir:
+In the [previous post](https://evuez.net/posts/curried-elixir.html), we implemented a `curry` function for Elixir:
 
     iex> f = curry(&Enum.map/2)
     #Function<...>

@@ -3,7 +3,7 @@ tags = ["elixir"]
 date = 2021-01-30
 %%%
 
-In a [previous post](https://liftm.io/posts/curried-elixir.html), we implemented a `curry` function for Elixir, and in the [following post](https://liftm.io/posts/curried-elixir-flip.html), we built a `flip` function for our curried functions.
+In a [previous post](https://evuez.net/posts/curried-elixir.html), we implemented a `curry` function for Elixir, and in the [following post](https://evuez.net/posts/curried-elixir-flip.html), we built a `flip` function for our curried functions.
 
 I want to build one last thing for our curried function, and that's a composition operator. Elixir doesn't support function composition, you have to use anonymous functions or the [capture operator](https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&/1) instead:
 
@@ -42,6 +42,6 @@ Let's try this!
     iex> g.(:y)
     [200, 400, 600]
 
-With [currying](https://liftm.io/posts/curried-elixir.html), composing and transforming functions becomes a lot easier!
+With [currying](https://evuez.net/posts/curried-elixir.html), composing and transforming functions becomes a lot easier!
 
 Obviously, Elixir probably isn't the best language for that, as its syntax and the lack of support for curried functions in the language make things look a lot more convoluted than they should.

@@ -3,7 +3,7 @@ tags = ["elixir"]
 date = 2021-02-13
 %%%
 
-In [Curried Elixir](https://liftm.io/posts/curried-elixir.html), I said this:
+In [Curried Elixir](https://evuez.net/posts/curried-elixir.html), I said this:
 
 > We're going to do this by wrapping `my_fun` in a chain of anonymous functions, each binding exactly one name:
 >

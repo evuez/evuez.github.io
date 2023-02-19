@@ -1,5 +1,5 @@
 name = "evuez"
-home = "https://liftm.io"
+home = "https://evuez.net"
 author = "evuez"
 
 [templates]
@@ -11,10 +11,9 @@ name = "Posts"
 path = "posts"
 
 [[source]]
-name = "Notes"
-path = "notes"
-
-[[source]]
 name = "Projects"
 path = "projects"
 
+[[source]]
+name = "Notes"
+path = "notes"
