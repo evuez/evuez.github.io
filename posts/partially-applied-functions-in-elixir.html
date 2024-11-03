@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Partially applied functions in Elixir</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Partially applied functions in Elixir</h1>
+        <time datetime="2017-12-13">2017-12-13</time>
+      <p>Thanks to the <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&amp;/1">capture operator</a> it’s easy to create partially applied functions in Elixir:</p>
+<pre><code>iex&gt; sum = fn (a, b) -&gt; a + b end
+iex&gt; sum.(1, 2)
+3
+iex&gt; add42 = &amp;sum.(&amp;1, 42)
+iex&gt; add42.(3)
+45
+iex&gt; greet = &amp;IO.puts(&quot;Hello &quot; &lt;&gt; &amp;1 &lt;&gt; &quot;!&quot;)
+iex&gt; greet.(&quot;Marvin&quot;)
+Hello Marvin!
+:ok
+</code></pre>
+
+    </article>
+  </main>
+</body>
+</html>

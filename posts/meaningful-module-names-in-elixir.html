@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Meaningful module names in Elixir</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Meaningful module names in Elixir</h1>
+        <time datetime="2021-02-05">2021-02-05</time>
+      <p>Just a reminder that you don't need to restrict yourself to Pascal case for module names.</p>
+<p>If you like consistency and think module names should look like function names, don't think twice!</p>
+<pre><code>defmodule :snake_case, do: nil
+</code></pre>
+<p>If you like symbols, you have <a href="https://hexdocs.pm/elixir/operators.html">a lot of options</a>!</p>
+<pre><code>defmodule :::, do: nil
+defmodule :.., do: nil
+defmodule :@, do: nil
+defmodule :&lt;, do: nil
+</code></pre>
+<p>Or even</p>
+<pre><code>defmodule :., do: nil
+</code></pre>
+<p>And don't forget about <a href="https://hexdocs.pm/elixir/operators.html#custom-and-overridden-operators">custom operators</a>! You can get really fancy here:</p>
+<pre><code>defmodule :. do
+  def a +++ b, do: a + b
+end
+
+iex&gt; :&quot;.&quot;.+++ 1, 2
+3
+</code></pre>
+<p>Or maybe</p>
+<pre><code>defmodule :&gt;&gt;&gt; do
+  def a &gt;&gt;&gt; b, do: &quot;brrr&quot;
+end
+
+iex&gt; :&gt;&gt;&gt;.&gt;&gt;&gt; 1, 2
+&quot;brrr&quot;
+</code></pre>
+<p>Finally, don't:</p>
+<pre><code>defmodule APerfectlyFineModule do
+  @moduledoc &quot;Here be dragons&quot;
+end
+</code></pre>
+<p>This is just too easy to miss. Instead, do:</p>
+<pre><code>defmodule :&quot;Here be dragons&quot;, do: nil
+</code></pre>
+
+    </article>
+  </main>
+</body>
+</html>
