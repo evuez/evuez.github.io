@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Cursed Elixir</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Cursed Elixir</h1>
+        <time datetime="2020-08-12">2020-08-12</time>
+      <p>Let's write some Elixir.</p>
+<pre><code>defmodule FooBar do
+  def foo(a) do
+    if a &lt; 0 do
+      bar(a, -1)
+    else
+      bar(a, 1)
+    end
+  end
+
+  defp bar(a, b) do
+    IO.inspect(a * b)
+  end
+end
+</code></pre>
+<p>Not very useful, but that's good enough for our purpose.</p>
+<p>I like Elixir, but I think most of the time it just looks like functional Ruby. I want to make this code look like Elixir.</p>
+<p>First, this code is lacking every Elixir developer's best friend: <code>|&gt;</code>. Let's add some <code>|&gt;</code>s.</p>
+<pre><code>defmodule FooBar do
+  def foo(a) do
+    if a &lt; 0 do
+      a |&gt; bar(-1)
+    else
+      a |&gt; bar(1)
+    end
+  end
+
+  defp bar(a, b) do
+    (a * b) |&gt; IO.inspect()
+  end
+end
+</code></pre>
+<p>Meh. It's definitely better, but I mean, that's only 3 <code>|&gt;</code>s. I want more <code>|&gt;</code>s.</p>
+<p>We have an <code>if</code> in there, so maybe we can do something with it?</p>
+<pre><code>defmodule FooBar do
+  def foo(a) do
+    (a &lt; 0) |&gt; if do
+      a |&gt; bar(-1)
+    else
+      a |&gt; bar(1)
+    end
+  end
+
+  defp bar(a, b) do
+    (a * b) |&gt; IO.inspect()
+  end
+end
+</code></pre>
+<p>We sure can! That's one more <code>|&gt;</code>. Can we do better than this?</p>
+<p>Well... <code>&gt;</code> and <code>*</code> are <code>Kernel</code> functions, so maybe...</p>
+<pre><code>defmodule FooBar do
+  def foo(a) do
+    a |&gt; Kernel.&lt;(0) |&gt; if do
+      a |&gt; bar(-1)
+    else
+      a |&gt; bar(1)
+    end
+  end
+
+  defp bar(a, b) do
+    a |&gt; Kernel.*(b) |&gt; IO.inspect()
+  end
+end
+</code></pre>
+<p>This is great, can we keep going?</p>
+<p>The Elixir docs say <code>defmodule</code> is just a macro. Does that mean I can just <code>|&gt;</code> into <code>defmodule</code>?</p>
+<pre><code>FooBar |&gt; defmodule do
+  def foo(a) do
+    a |&gt; Kernel.&lt;(0) |&gt; if do
+      a |&gt; bar(-1)
+    else
+      a |&gt; bar(1)
+    end
+  end
+
+  defp bar(a, b) do
+    a |&gt; Kernel.*(b) |&gt; IO.inspect()
+  end
+end
+</code></pre>
+<p>Yes you can!</p>
+<p><code>def</code> and <code>defp</code> are macros too right?</p>
+<pre><code>FooBar |&gt; defmodule do
+  a |&gt; foo() |&gt; def do
+    a |&gt; Kernel.&lt;(0) |&gt; if do
+      a |&gt; bar(-1)
+    else
+      a |&gt; bar(1)
+    end
+  end
+
+  a |&gt; bar(b) |&gt; defp do
+    a |&gt; Kernel.*(b) |&gt; IO.inspect()
+  end
+end
+</code></pre>
+<p>So many pipes!</p>
+<p>We're getting somewhere, but something still doesn't feel right. This module really isn't doing much, so maybe it should not be that long? Also, I think we need more <code>:</code>. Atoms are very Elixir-y, so let's do more of that:</p>
+<pre><code>FooBar |&gt; defmodule(do: (
+  a |&gt; foo() |&gt; def(do: a |&gt; Kernel.&lt;(0) |&gt; if(do: a |&gt; bar(-1), else: a |&gt; bar(1)))
+
+  a |&gt; bar(b) |&gt; defp(do: a |&gt; Kernel.*(b) |&gt; IO.inspect())
+))
+</code></pre>
+<p>We're <code>:do</code>ing great!</p>
+<p>You know what's also very Elixir-y? Lists. Lists and tuples.</p>
+<pre><code>FooBar |&gt; defmodule([{:do, (
+  a
+  |&gt; foo()
+  |&gt; def([{:do, a |&gt; Kernel.&lt;(0) |&gt; if([{:do, a |&gt; bar(-1)}, {:else, a |&gt; bar(1)}])}])
+
+  a |&gt; bar(b) |&gt; defp([{:do, a |&gt; Kernel.*(b) |&gt; IO.inspect()}])
+)}])
+</code></pre>
+<p>Who's going to say this looks like Ruby now?</p>
+<hr />
+<p><a href="https://news.ycombinator.com/item?id=24818706">discussion on hackernews</a> /
+<a href="https://www.reddit.com/r/elixir/comments/jd2hr4/cursed_elixir/">discussion on reddit</a></p>
+
+    </article>
+  </main>
+</body>
+</html>

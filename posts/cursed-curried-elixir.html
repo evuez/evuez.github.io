@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Cursed curried Elixir</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Cursed curried Elixir</h1>
+        <time datetime="2021-02-13">2021-02-13</time>
+      <p>In <a href="https://evuez.net/posts/curried-elixir.html">Curried Elixir</a>, I said this:</p>
+<blockquote>
+<p>We're going to do this by wrapping <code>my_fun</code> in a chain of anonymous functions, each binding exactly one name:</p>
+<pre><code>curried_fun =
+  fn (a) -&gt;
+    fn (b) -&gt;
+      fn (c) -&gt;
+        my_fun.(a, b, c)
+      end
+    end
+  end
+</code></pre>
+</blockquote>
+<p>And then went on implementing <code>curry</code> as a recursive function. But what if I actually want my curried function to be a chain of anonymous functions, and get rid of this recursive call?</p>
+<p>The obvious thing to do would be to try to implement this as a macro instead. But I think we can do better than this.</p>
+<p>First, let's look at the <a href="https://hexdocs.pm/elixir/syntax-reference.html#the-elixir-ast">AST</a> for the <code>curried_fun</code> above:</p>
+<pre><code>iex&gt; quote do
+...&gt;   fn (a) -&gt;
+...&gt;     fn (b) -&gt;
+...&gt;       fn (c) -&gt;
+...&gt;         my_fun.(a, b, c)
+...&gt;       end
+...&gt;     end
+...&gt;   end
+...&gt; end
+#                ▼ metadata                ▼ nested anonymous function
+{:fn, [], [{:-&gt;, [], [[{:a, [], Elixir}], {:fn, [], [{:-&gt;, ...}]}]}]}
+#                      ▲ list of parameters
+</code></pre>
+<p>This might look a bit messy, but there really isn't much going on:</p>
+<pre><code>{:fn, [], # The definition with an empty list of metadata
+ [
+   {:-&gt;, [],
+    [
+      [{:a, [], Elixir}], # Left-hand side of `-&gt;`, the head of the anonymous function
+      {:fn , [], # Right-hand side of `-&gt;`, the body of the anonymous function
+       ...
+</code></pre>
+<h2>Building the AST</h2>
+<p>Just to get started, let's see if we can write a function that generates this AST for us.
+We want this function to take as arguments the length of the chain and the body of the innermost function in the chain:</p>
+<pre><code>def make_chain(length_, body) do
+  Enum.reduce(1..length_, body, fn x, acc -&gt;
+    {:fn, [], [{:-&gt;, [], [[{:&quot;arg#{x}&quot;, [], nil}], acc]}]}
+  end)
+end
+</code></pre>
+<p>Or better, use <a href="https://hexdocs.pm/elixir/Macro.html#generate_unique_arguments/2"><code>Macro.generate_unique_arguments/2</code></a> to generate the list of parameters for us:</p>
+<pre><code>defmodule Func do
+  def make_chain(length_, body) do
+    length_
+    |&gt; Macro.generate_unique_arguments(nil)
+    |&gt; Enum.reverse() # Without this, the outermost function would get the last argument, which could make things confusing
+    |&gt; Enum.reduce(body, fn arg, acc -&gt;
+      {:fn, [], [{:-&gt;, [], [[arg], acc]}]}
+    end)
+  end
+end
+</code></pre>
+<p>We can use <a href="https://hexdocs.pm/elixir/Macro.html#to_string/2"><code>Macro.to_string/1</code></a> to check if this works as expected:</p>
+<pre><code>iex&gt; Macro.to_string(make_chain(2, &quot;Foo&quot;))
+&quot;fn arg1 -&gt; fn arg2 -&gt; \&quot;Foo\&quot; end end&quot;
+</code></pre>
+<p>Perfect!</p>
+<p>We have one thing left to do before we can start rewriting <code>curry</code>: we need to generate the AST to call <code>fun</code>. This is actually pretty easy:</p>
+<pre><code>iex&gt; quote do: fun.(a, b)
+{{:., [], [{:fun, [], Elixir}]}, [], [{:a, [], Elixir}, {:b, [], Elixir}]}
+</code></pre>
+<p>All we need is <a href="https://hexdocs.pm/elixir/Macro.html#generate_unique_arguments/2"><code>Macro.generate_unique_arguments/2</code></a> and <a href="https://hexdocs.pm/elixir/master/Function.html#info/2"><code>Function.info/2</code></a> to get the arity of <code>fun</code>:</p>
+<pre><code>iex&gt; fun = &amp;Map.get/2
+iex&gt; {:arity, arity} = Function.info(fun, :arity)
+iex&gt; params = Macro.generate_unique_arguments(arity, nil)
+iex&gt; Macro.to_string({{:., [], [{:fun, [], nil}]}, [], params})
+&quot;fun.(arg1, arg2)&quot;
+</code></pre>
+<h2>Evaluating the AST</h2>
+<p>We now know how to generate the AST for our curried function. For the next step, we need to figure out how to use it!</p>
+<p>If you're scared of <a href="https://hexdocs.pm/elixir/Kernel.html#defmacro/2"><code>defmacro/2</code></a> and <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#unquote/1"><code>unquote/1</code></a>, don't worry. We don't need any of that. Everyone knows macros are scary.</p>
+<p>You know what's not scary? <em>Runtime evaluation!</em></p>
+<p>With <a href="https://hexdocs.pm/elixir/Code.html#eval_quoted/3"><code>Code.eval_quoted/2</code></a>, we should finally be able to write our <code>curry</code> function:</p>
+<pre><code>defmodule Func do
+  def curry(fun) do
+    {:arity, arity} = Function.info(fun, :arity)
+    params = Macro.generate_unique_arguments(arity, nil)
+    body_ast = {{:., [], [{:fun, [], nil}]}, [], params}
+
+    {curried_fun, _} =
+      params
+      |&gt; Enum.reverse()
+      |&gt; Enum.reduce(body_ast, fn arg, acc -&gt;
+        {:fn, [], [{:-&gt;, [], [[arg], acc]}]}
+      end)
+      |&gt; Code.eval_quoted(fun: fun)
+
+    curried_fun
+  end
+end
+</code></pre>
+<p>Does it work?</p>
+<pre><code>iex&gt; curried_sum = Func.curry(fn x, y -&gt; x + y end)
+#Function&lt;...&gt;
+iex&gt; curried_sum.(1).(2)
+3
+iex&gt; Func.curry(&amp;Map.get/2).(%{foo: &quot;bar&quot;}).(:foo)
+&quot;bar&quot;
+</code></pre>
+<p>It does!
+Who needs macros??</p>
+
+    </article>
+  </main>
+</body>
+</html>

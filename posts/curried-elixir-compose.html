@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Curried Elixir: Compose</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Curried Elixir: Compose</h1>
+        <time datetime="2021-01-30">2021-01-30</time>
+      <p>In a <a href="https://evuez.net/posts/curried-elixir.html">previous post</a>, we implemented a <code>curry</code> function for Elixir, and in the <a href="https://evuez.net/posts/curried-elixir-flip.html">following post</a>, we built a <code>flip</code> function for our curried functions.</p>
+<p>I want to build one last thing for our curried function, and that's a composition operator. Elixir doesn't support function composition, you have to use anonymous functions or the <a href="https://hexdocs.pm/elixir/Kernel.SpecialForms.html#&amp;/1">capture operator</a> instead:</p>
+<pre><code>iex&gt; add_2 = fn x -&gt; x + 2 end
+iex&gt; mul_3 = fn x -&gt; x * 3 end
+iex&gt; add_2_and_mul_3 = fn x -&gt; mul_3.(add_2.(x)) end # or &amp;mul_3.(add_2.(&amp;1))
+iex&gt; add_2_and_mul_3.(5)
+21
+</code></pre>
+<p>It's... ok I guess? But I'd really prefer if I could just do something like <code>add_2_and_mul_3 = mul_3 . add_2</code>.
+<code>.</code> isn't overridable, but we can use any of the <a href="https://hexdocs.pm/elixir/master/operators.html#defining-custom-operators">custom operators</a>. I'm going to pick <code>&lt;~&gt;</code>.</p>
+<pre><code>defmodule Func do
+  def f &lt;~&gt; g when is_function(g), do: fn x -&gt; f &lt;~&gt; g.(x) end # Reduce the right-hand function first
+  def f &lt;~&gt; x, do: f.(x) # When we're done reducing the right-hand side, reduce the left-hand side
+end
+</code></pre>
+<p>Remember, we expect <code>f</code> and <code>g</code> to be curried here, which is why we don't have to worry about their arity: it's always <code>f/1</code> and <code>g/1</code>.</p>
+<p>Let's try this!</p>
+<pre><code>iex&gt; add_2 = fn x -&gt; x + 2 end
+iex&gt; mul_3 = fn x -&gt; x * 3 end
+iex&gt; (mul_3 &lt;~&gt; add_2).(5)
+21
+iex&gt; flipped_map = (&amp;Enum.map/2) |&gt; curry() |&gt; flip()
+iex&gt; flipped_get = (&amp;Map.get/2) |&gt; curry() |&gt; flip()
+iex&gt; map_mul_2 = flipped_map.(fn x -&gt; x * 2 end)
+iex&gt; f = map_mul_2 &lt;~&gt; flipped_get
+iex&gt; a = %{x: [1, 2, 3], y: [100, 200, 300]}
+iex&gt; f.(:x).(a)
+[2, 4, 6]
+iex&gt; g = flip(f).(a)
+iex&gt; g.(:x)
+[2, 4, 6]
+iex&gt; g.(:y)
+[200, 400, 600]
+</code></pre>
+<p>With <a href="https://evuez.net/posts/curried-elixir.html">currying</a>, composing and transforming functions becomes a lot easier!</p>
+<p>Obviously, Elixir probably isn't the best language for that, as its syntax and the lack of support for curried functions in the language make things look a lot more convoluted than they should.</p>
+
+    </article>
+  </main>
+</body>
+</html>

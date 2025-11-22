@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - Curried Elixir: Flip</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>Curried Elixir: Flip</h1>
+        <time datetime="2021-01-29">2021-01-29</time>
+      <p>In the <a href="https://evuez.net/posts/curried-elixir.html">previous post</a>, we implemented a <code>curry</code> function for Elixir:</p>
+<pre><code>iex&gt; f = curry(&amp;Enum.map/2)
+#Function&lt;...&gt;
+iex&gt; f.(1..3).(&amp;&quot;i = #{&amp;1}&quot;)
+[&quot;i = 1&quot;, &quot;i = 2&quot;, &quot;i = 3&quot;]
+</code></pre>
+<p>Currying on its own is nice, but it also gives us the ability to easily define a <code>flip</code> function that would let us flip the order of the first two arguments of a curried function:</p>
+<pre><code>iex&gt; f = curry(&amp;Enum.map/2)
+#Function&lt;...&gt;
+iex&gt; flipped = flip(f)
+#Function&lt;...&gt;
+iex&gt; f.(&amp;&quot;i = #{&amp;1}&quot;).(1..3)
+[&quot;i = 1&quot;, &quot;i = 2&quot;, &quot;i = 3&quot;]
+</code></pre>
+<p>The only thing we have to do is wrap the given curried function in a chain of two anonymous functions, and reverse the order of the arguments:</p>
+<pre><code>defmodule Func do
+  def flip(fun) when is_function(fun) do
+    fn b -&gt;
+      fn a -&gt; fun.(a).(b) end
+    end
+  end
+end
+</code></pre>
+<p>And this is how you could use it:</p>
+<pre><code>iex&gt; curried_add = curry(&amp;Kernel.+/2)
+iex&gt; curried_mul = curry(&amp;Kernel.*/2)
+iex&gt; curried_map = curry(&amp;Enum.map/2)
+iex&gt; flipped_map = flip(curried_map)
+iex&gt; map_3 = curried_map.(1..3)
+iex&gt; f = flipped_map.(map_3)
+iex&gt; f.([curried_add.(2), curried_mul.(3)])
+[[3, 4, 5], [3, 6, 9]]
+iex&gt; f.([curried_add.(1), curried_mul.(4)])
+[[2, 3, 4], [4, 8, 12]]
+</code></pre>
+<p>It would be a lot more useful if the standard library functions were able to handle our curried functions (for example, <a href="https://hexdocs.pm/elixir/Enum.html#reduce/3"><code>Enum.reduce/3</code></a> expects a 2-arity function as its third argument, not a curried 2-arity function), but I never said we were building something useful ¯_(ツ)_/¯</p>
+
+    </article>
+  </main>
+</body>
+</html>

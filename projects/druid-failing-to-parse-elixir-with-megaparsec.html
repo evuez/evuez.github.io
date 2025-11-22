@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>evuez - druid: Failing to parse Elixir with Megaparsec</title>
+
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <header>
+    <a href="https://git.k.mulga.net/julien">git</a> /
+    <a href="mailto:hello@evuez.net">email</a>
+  </header>
+  <main>
+    <a href="../index.html">index</a>
+    <article>
+      <h1>druid: Failing to parse Elixir with Megaparsec</h1>
+        <time datetime="2020-01-31">2020-01-31</time>
+      <p><a href="https://github.com/evuez/druid/">Repo</a></p>
+<p>Last year I spent some time trying to parse Elixir with <a href="https://github.com/mrkkrp/megaparsec">Megaparsec</a>.</p>
+<p>One of my colleague had started writing a parser for Elixir in Rust using <a href="https://github.com/lalrpop/lalrpop">lalrpop</a>, and I thought it'd be fun to write one with a parser combinator so we could compare our implementations.</p>
+<p>We never got to that point. Turns out, the Elixir syntax is not as simple as you might think.</p>
+<p>To be clear, my failure to parse Elixir has nothing to do with Megaparsec: I'm sure anyone with a decent knowledge of it would have no problem solving the many issues I faced. But having spent many hours trying to solve these issues, I now have a greater appreciation for all the effort that has been put into making the Elixir syntax so easy to pick up.</p>
+<p>So this is a list of syntax quirks I learned about while writing this parser. Some of these might be obvious, but hopefully you'll still learn a thing or two while reading this.</p>
+<h2>The <a href="https://hexdocs.pm/elixir/Access.html">access syntax</a></h2>
+<p>I've never been a huge fan of the <code>data[key]</code> syntax: I feel like it doesn't make it clear that <code>data[unknown_key][key]</code> won't throw an error and will just return <code>nil</code> instead. I can't say spending too many hours trying to parse it properly changed my mind on this syntax.</p>
+<p>I'm not sure exactly what made it so complex to parse, but here a few examples that I had a hard time with:</p>
+<ul>
+<li><code>data[:key]</code>: this is the proper access syntax, it's the same as <code>Access.get(data, :key)</code>.</li>
+<li><code>data [:key]</code>: this is a function call, it's the same as <code>data([:key])</code>.</li>
+<li><code>1 [:key]</code>: What do you think? Syntax error? Wrong! This is a valid access syntax, it's the same as <code>Access.get(1, :key)</code>.</li>
+<li><code>data [:a] [:b]</code>: That's valid too. It's equivalent to <code>data([:a][:b])</code>.</li>
+<li><code>data[:a, :b]</code> or <code>data[]</code>: Now these are syntax errors.</li>
+<li><code>data[\n:a\n]</code>: Access syntax, newlines are allowed inside <code>[]</code>.</li>
+<li><code>data\n[:a]</code>: This on the other hand, is <em>obviously</em> just a block of code with two separate statements (I know it really does seem obvious if you're used to writing Elixir. It took me a while to make it obvious to my parser too).</li>
+</ul>
+<p>Overall these examples don't look too bad, but the fact that the access syntax and lists both use <code>[]</code> and that you don't need parens for function application made this a lot harder to parse that I thought it would be.</p>
+<p>If you don't know what came before a <code>[</code> when you reach it, you can't decide whether it's a list, a syntax error or the access syntax.</p>
+<h2>Function application: parens or spaces?</h2>
+<p>Being able to write <code>def foo(:bar) do...</code> instead of <code>def(foo(:bar), do: ...)</code> is pretty nice, but making sense of this syntax to try to parse it really isn't.</p>
+<p>For example, <code>foo (a)</code> is valid but <code>foo (a, b)</code> isn't.</p>
+<p>It makes it kind of hard to know where you can ignore spaces and where you can't. Maybe there's a rule for that but I haven't figured it out yet.</p>
+<h2>Line breaks and semicolons</h2>
+<p>Remember when I said <code>data\n[:a]</code> is just a block of code with two separate statements? Well that's true, but it isn't <em>always</em> true. It depends on what's at the end of your first line or at the start of your second line.</p>
+<pre><code>a
+= 1
+</code></pre>
+<p>is equivalent to</p>
+<pre><code>a =
+1
+</code></pre>
+<p>which is the same as <code>a = 1</code>.</p>
+<pre><code>a
+* 1
+</code></pre>
+<p>is the same as <code>a * 1</code>, but</p>
+<pre><code>a +
+1
+</code></pre>
+<p>is different from</p>
+<pre><code>a
++ 1
+</code></pre>
+<p>because the unary <code>+</code> has higher precedence than the binary <code>+</code>. This last example is the same as <code>a; +1</code>.</p>
+<p>Long pipelines look nice when you can split them over multiple lines, and I don't miss having to add a semicolon to the end of every statement. But it's definitely not something that comes for free in a parser.</p>
+<h2>Structs and maps updates with <code>|</code></h2>
+<p><code>|</code> is defined as a <a href="https://hexdocs.pm/elixir/master/operators.html#defining-custom-operators">custom, overridable binary operator</a>, but it's also used as a special operator in the update syntax for <a href="https://hexdocs.pm/elixir/Map.html">maps and structs</a>.</p>
+<p>This makes parsing this operator a little more complex, since you have to carry around some context to know if you're currently in a map or a struct and parse it accordingly.
+It's not too bad, but given my Megaparsec skills are not great, I ended up creating a <a href="https://github.com/evuez/druid/blob/18055b60ecd679439f415ca7f412fac02e02e01b/src/Lib.hs#L550">separate parser</a> just for this.</p>
+<h2><a href="https://hexdocs.pm/elixir/syntax-reference.html#keywords">Keywords lists</a></h2>
+<p>This is a keywords list: <code>[a: 1]</code>. This is a keywords list in a function call: <code>foo(a: 1)</code>. And another one: <code>foo([a: 1])</code>. This is a keywords list too: <code>[{:a, 1}, b: 2]</code>.</p>
+<p>This is a syntax error: <code>[a: 1, {:b, 2}]</code>.</p>
+<p>This isn't a keyword list: <code>[{&quot;a&quot;, 1}]</code>. Nor this is: <code>[{:a, 1}, {&quot;b&quot;, 2}]</code> (the first element of every tuple must be an atom).</p>
+<p>These are both valid access syntax: <code>data[a: 1]</code> and <code>data[{:a, 1}]</code>. Do you think they are equivalent? Well, let's ask <code>quote</code>:</p>
+<pre><code>iex&gt; quote do: data[a: 1]
+{{:., [], [Access, :get]}, [], [{:data, [], Elixir}, [a: 1]]}
+
+iex&gt; quote do: data[{:a, 1}]
+{{:., [], [Access, :get]}, [], [{:data, [], Elixir}, {:a, 1}]}
+</code></pre>
+<p>So <code>data[{:a, 1}]</code> is probably what you'd expect: it's the same as <code>Access.get(data, {:a, 1})</code>.</p>
+<p>On the other hand, <code>data[a: 1]</code> might not be what you expected: it's equivalent to <code>data[[a: 1]]</code>, <code>Access.get(data, [a: 1])</code>, or <code>Access.get(data, [{:a, 1}])</code>.</p>
+<p>Hopefully I don't need more examples for this one: parsing keywords lists is <strong>hard</strong>.</p>
+<h2>And more...</h2>
+<p>There are many other things you have to be careful about when parsing Elixir. You can check out <a href="https://github.com/evuez/druid/blob/2baec508b0cba8e4371ccc054c6b91f864d9d2ba/test/Spec.hs">the tests</a> I wrote for my incomplete parser for a more extensive list.</p>
+<p>The official <a href="https://github.com/elixir-lang/elixir/blob/master/lib/elixir/src/elixir_parser.yrl">Elixir parser</a>, the <a href="https://hexdocs.pm/elixir/syntax-reference.html">syntax reference</a> and <a href="https://hexdocs.pm/elixir/operators.html#content">operators page</a> are all very good references if you want to learn more about the Elixir syntax.</p>
+<p>Even though I definitely failed at writing a complete parser, I have learned a lot about Elixir and definitely improved my Megaparsec skills! This was a great exercise, and if you're feeling adventurous and want to learn more about Elixir or programming languages parsing in general, I'd definitely encourage you to try it.</p>
+
+    </article>
+  </main>
+</body>
+</html>
