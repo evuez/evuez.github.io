@@ -58,4 +58,4 @@ Now `x.column ~>> field` works as expected. For the nested access, we just need 
       defp rhs(field) when is_binary(field), do: field
     end
 
-And we can now write `x.column~>field~>>nested == "value"`, instead of `fragment("?->'field'->>'nested' = ?", x.column, "value")` 🎉
+And we can now write `x.column~>field~>>nested == "value"`, instead of `fragment("?->'field'->>'nested' = ?", x.column, "value")`.

@@ -42,4 +42,4 @@ And this is how you could use it:
     iex> f.([curried_add.(1), curried_mul.(4)])
     [[2, 3, 4], [4, 8, 12]]
 
-It would be a lot more useful if the standard library functions were able to handle our curried functions (for example, [`Enum.reduce/3`](https://hexdocs.pm/elixir/Enum.html#reduce/3) expects a 2-arity function as its third argument, not a curried 2-arity function), but I never said we were building something useful 🤷
+It would be a lot more useful if the standard library functions were able to handle our curried functions (for example, [`Enum.reduce/3`](https://hexdocs.pm/elixir/Enum.html#reduce/3) expects a 2-arity function as its third argument, not a curried 2-arity function), but I never said we were building something useful ¯\_(ツ)_/¯

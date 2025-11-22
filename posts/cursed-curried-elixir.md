@@ -75,7 +75,7 @@ We can use [`Macro.to_string/1`](https://hexdocs.pm/elixir/Macro.html#to_string/
     iex> Macro.to_string(make_chain(2, "Foo"))
     "fn arg1 -> fn arg2 -> \"Foo\" end end"
 
-Perfect! 🎉
+Perfect!
 
 We have one thing left to do before we can start rewriting `curry`: we need to generate the AST to call `fun`. This is actually pretty easy:
 
@@ -127,5 +127,5 @@ Does it work?
     iex> Func.curry(&Map.get/2).(%{foo: "bar"}).(:foo)
     "bar"
 
-It does! 🎉
+It does!
 Who needs macros??

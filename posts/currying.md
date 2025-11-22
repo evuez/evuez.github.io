@@ -41,4 +41,4 @@ So currying is nice because it allows to easily create new functions on the fly 
 
 Note that it differs from *partial application*: a curried function always takes a single parameter and always returns a function that takes a single parameter, so what you get is *a chain of unary functions*, whereas with partial application you can apply `n` parameters to your function and you’ll just get *a function that takes `arity-n` parameters*.
 
-In Haskell, *every* function is curried! 🎆
+In Haskell, *every* function is curried!

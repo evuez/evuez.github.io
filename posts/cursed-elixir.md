@@ -111,7 +111,7 @@ Yes you can!
       end
     end
 
-So many pipes! 😍
+So many pipes!
 
 We're getting somewhere, but something still doesn't feel right. This module really isn't doing much, so maybe it should not be that long? Also, I think we need more `:`. Atoms are very Elixir-y, so let's do more of that:
 
@@ -133,7 +133,7 @@ You know what's also very Elixir-y? Lists. Lists and tuples.
       a |> bar(b) |> defp([{:do, a |> Kernel.*(b) |> IO.inspect()}])
     )}])
 
-Who's going to say this looks like Ruby now? ⚗️
+Who's going to say this looks like Ruby now?
 
 ---
 
